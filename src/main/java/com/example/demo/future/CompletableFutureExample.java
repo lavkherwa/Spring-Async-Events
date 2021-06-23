@@ -34,7 +34,7 @@ public class CompletableFutureExample {
 
 	private static Supplier<String> getTransactionId() {
 
-		Supplier<String> transactionId = new Supplier<String>() {
+		return new Supplier<String>() {
 
 			@Override
 			public String get() {
@@ -42,8 +42,6 @@ public class CompletableFutureExample {
 			}
 
 		};
-
-		return transactionId;
 
 	}
 
