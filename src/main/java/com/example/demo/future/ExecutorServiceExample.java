@@ -15,34 +15,38 @@ public class ExecutorServiceExample {
 		List<CompletableFuture<String>> executedTasksList = new ArrayList<>();
 		ExecutorService executor = Executors.newFixedThreadPool(5);
 
-		// @formatter:off
-		tasks
-			.stream()
-			.forEach( task -> {
-				executedTasksList.add(CompletableFuture
-						.supplyAsync(
-								processData(task), executor)
-						.handle((resp, err) -> {
-								if(err != null) {
-									System.out.println("Error occurred, details: " + err);
-								}
-								return resp;
-						})
-					);
+		try {
+
+			// @formatter:off
+			tasks
+				.stream()
+				.forEach( task -> {
+					executedTasksList.add(CompletableFuture
+							.supplyAsync(
+									processData(task), executor)
+							.handle((resp, err) -> {
+									if(err != null) {
+										System.out.println("Error occurred, details: " + err);
+									}
+									return resp;
+							})
+						);
+				});
+			
+			// Result from all the futures
+			executedTasksList.stream().forEach(task -> {
+				try {
+					System.out.println(task.get());
+				} catch (InterruptedException | ExecutionException e) {
+					System.out.println("something went wrong!");
+				}
 			});
-		
-		
-		
-		// Result from all the futures
-		executedTasksList.stream().forEach(task -> {
-			try {
-				System.out.println(task.get());
-			} catch (InterruptedException | ExecutionException e) {
-				System.out.println("something went wrong!");
-			}
-		});
-		
-		// @formatter:on
+			
+			// @formatter:on
+
+		} finally {
+			executor.shutdown();
+		}
 
 	}
 
