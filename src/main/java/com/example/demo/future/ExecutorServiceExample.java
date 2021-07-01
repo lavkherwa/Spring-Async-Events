@@ -33,6 +33,7 @@ public class ExecutorServiceExample {
 							.thenApplyAsync((data) -> {
 								return data + "; thenApplyAsync thread: " + Thread.currentThread().getName();
 							}, executor)
+							
 						);
 				});
 			
