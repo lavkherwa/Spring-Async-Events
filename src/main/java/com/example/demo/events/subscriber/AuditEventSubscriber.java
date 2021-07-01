@@ -30,7 +30,7 @@ public class AuditEventSubscriber {
 			*/
 			
 		}finally {
-			Test.transactionId.set(null);
+			Test.transactionId.remove();
 		}
 		
 		

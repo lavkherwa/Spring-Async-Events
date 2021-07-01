@@ -1,11 +1,10 @@
-package com.example.demo.future;
+package com.example.demo.future.wrapcontext;
 
 import java.util.function.Supplier;
 
 import org.springframework.stereotype.Component;
 
 import com.example.demo.controller.Test;
-
 
 @Component
 public class ThreadContextWrapper {
@@ -17,7 +16,7 @@ public class ThreadContextWrapper {
 			try {
 				return fn.get();
 			} finally {
-				Test.transactionId.set(null);
+				Test.transactionId.remove();
 			}
 		};
 	}

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.events.publisher.AuditEventPublisher;
-import com.example.demo.future.CompletableFutureExample;
+import com.example.demo.future.wrapcontext.CompletableFutureExample;
 
 @RestController
 @RequestMapping("/")
