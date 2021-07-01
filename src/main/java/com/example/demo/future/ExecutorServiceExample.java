@@ -27,9 +27,12 @@ public class ExecutorServiceExample {
 							.handle((resp, err) -> {
 									if(err != null) {
 										System.out.println("Error occurred, details: " + err);
-									}
-									return resp;
-							})
+										}
+									return resp + "; supplyAsyc thread: " + Thread.currentThread().getName(); 
+									})
+							.thenApplyAsync((data) -> {
+								return data + "; thenApplyAsync thread: " + Thread.currentThread().getName();
+							}, executor)
 						);
 				});
 			
