@@ -2,13 +2,13 @@ package com.example.demo.future;
 
 import java.util.Arrays;
 
-public class Main {
+public class MainSync {
 
 	
-	public static void main(String[] args) {
+public static void main(String[] args) {
 		
 		ExecutorServiceExample
-		.execute(Arrays
+		.executeSync(Arrays
 					.asList("agent1", 
 							"agent2", 
 							"agent3", 
@@ -28,5 +28,4 @@ public class Main {
 							"agent17"));
 		
 	}
-	
 }

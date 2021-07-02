@@ -10,10 +10,31 @@ import java.util.function.Supplier;
 
 public class ExecutorServiceExample {
 
-	public static void execute(List<String> tasks) {
+	public static void executeSync(List<String> tasks) {
+
+		List<String> executedTasksList = new ArrayList<>();
+
+		// @formatter:off
+		tasks
+			.stream()
+			.forEach(task -> {
+					try {
+						executedTasksList.add(processDataSync(task));
+					} catch (Exception e) {
+						System.out.println(e);
+					}
+				});
+
+		executedTasksList
+			.stream()
+			.forEach(result -> System.out.println(result));
+		// @formatter:on
+	}
+
+	public static void executeAsync(List<String> tasks) {
 
 		List<CompletableFuture<String>> executedTasksList = new ArrayList<>();
-		ExecutorService executor = Executors.newFixedThreadPool(5);
+		ExecutorService executor = Executors.newFixedThreadPool(4);
 
 		try {
 
@@ -23,7 +44,7 @@ public class ExecutorServiceExample {
 				.forEach( task -> {
 					executedTasksList.add(CompletableFuture
 							.supplyAsync(
-									processData(task), executor)
+									processDataAsync(task), executor)
 							.handle((resp, err) -> {
 									if(err != null) {
 										System.out.println("Error occurred, details: " + err);
@@ -45,7 +66,6 @@ public class ExecutorServiceExample {
 					System.out.println("something went wrong!");
 				}
 			});
-			
 			// @formatter:on
 
 		} finally {
@@ -54,13 +74,34 @@ public class ExecutorServiceExample {
 
 	}
 
-	private static Supplier<String> processData(String task) {
+	private static String processDataSync(String task) {
+		try {
+			Thread.sleep(2000); // simulate task taking 2s I/O bound operation
+		} catch (InterruptedException e) {
+			System.out.println("thread sleep exception; details: " + e);
+		}
+
+		System.out.println("Thread name: " + Thread.currentThread().getName() + ", executing task: " + task);
+		if (task.equals("agent10")) {
+			throw new RuntimeException("Task 10 aborted");
+		}
+
+		return "Task " + task + ", executed successfully";
+	}
+
+	private static Supplier<String> processDataAsync(String task) {
 
 		return new Supplier<String>() {
 			@Override
 			public String get() {
-				System.out.println("Thread name: " + Thread.currentThread().getName() + ", executing task: " + task);
 
+				try {
+					Thread.sleep(2000); // simulate task taking 2s I/O bound operation
+				} catch (InterruptedException e) {
+					System.out.println("thread sleep exception; details: " + e);
+				}
+
+				System.out.println("Thread name: " + Thread.currentThread().getName() + ", executing task: " + task);
 				if (task.equals("agent10")) {
 					throw new RuntimeException("Task 10 aborted");
 				}
